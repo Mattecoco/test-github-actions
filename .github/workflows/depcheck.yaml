@@ -8,16 +8,16 @@ on:
 jobs:
     installNPM:
       steps:
-        - uses: actions/checkout@v2
-        - name: Install NPM dependencies
-          run: |
-            npm install --production --unsafe-perm
+      - uses: actions/checkout@v2
+      - name: Install NPM dependencies
+        run: |
+          npm install --production --unsafe-perm
         
     depCheck:
       steps:    
       - uses: sburris/dependency-check-action@master
-            with:
-              Project-Name: TestApp
+        with:
+          Project-Name: TestApp
     
     report:
       steps:
