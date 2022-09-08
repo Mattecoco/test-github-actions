@@ -22,6 +22,7 @@ jobs:
           Project-Name: TestApp
     
     report:
+      runs-on: ubuntu-latest
       steps:
       - name: Archive dependency check reports
         uses: actions/upload-artifact@v1
