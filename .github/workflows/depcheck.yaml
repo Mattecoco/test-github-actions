@@ -15,12 +15,12 @@ jobs:
           npm install --production --unsafe-perm
         
       - uses: sburris/dependency-check-action@master
-      - name: Scan dependency check
+      #- name: Scan dependency check
         with:
           Project-Name: TestApp
 
       - name: Archive dependency check reports
-        uses: actions/upload-artifact@v1
+      - uses: actions/upload-artifact@v1
         with:
           name: reports
           path: reports
