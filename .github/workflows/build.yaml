@@ -9,7 +9,35 @@ jobs:
     build:
         runs-on: ubuntu-latest
         steps:
+        # checkout
         - uses: actions/checkout@v2
+          with:
+              fetch-depth: 0  # Shallow clones should be disabled for a better relevancy of analysis
+        
+        # sonar scan
+          - name: SonarCloud Scan
+            uses: SonarSource/sonarcloud-github-action@master
+            env:
+              #GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # Needed to get PR information, if any
+              SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+
+        # dependency check      
+        - name: Install NPM dependencies
+          run: |
+            npm install --production --unsafe-perm
+          
+        - name: Scan dependency check
+          uses: sburris/dependency-check-action@master
+          with:
+            Project-Name: TestApp
+
+        - name: Archive dependency check reports
+          uses: actions/upload-artifact@v1
+          with:
+            name: reports
+            path: reports
+
+        # build and push to docker hub
         - name: build-push
           uses: docker/build-push-action@v1
           with:
@@ -18,15 +46,4 @@ jobs:
             registry: docker.io
             repository: mattecoco/cd
             tag_with_sha: true
-    sonarcloud:
-        name: SonarCloud
-        runs-on: ubuntu-latest
-        steps:
-          - uses: actions/checkout@v2
-            with:
-              fetch-depth: 0  # Shallow clones should be disabled for a better relevancy of analysis
-          - name: SonarCloud Scan
-            uses: SonarSource/sonarcloud-github-action@master
-            env:
-              #GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # Needed to get PR information, if any
-              SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+
