@@ -1,0 +1,31 @@
+name: OWASP Dependency Check
+
+on:
+    push:
+        branches:
+        - master
+
+jobs:
+    installNPM:
+      steps:
+        - uses: actions/checkout@v2
+        - name: Install NPM dependencies
+          run: |
+            npm install --production --unsafe-perm
+        
+    depCheck:
+      steps:    
+      - uses: sburris/dependency-check-action@master
+            with:
+              Project-Name: TestApp
+    
+    report:
+      steps:
+      - name: Archive dependency check reports
+        uses: actions/upload-artifact@v1
+        with:
+          name: reports
+          path: reports
+
+
+    
